@@ -3,6 +3,10 @@ package chess;
 import java.util.Collection;
 
 public class ChessPieceImp implements ChessPiece {
+    
+    public ChessPositionImp myPosition;
+    protected int myNumber;
+    
     @Override
     public ChessGame.TeamColor getTeamColor() {
         return null;
