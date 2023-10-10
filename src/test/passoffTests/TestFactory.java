@@ -1,7 +1,7 @@
 package passoffTests;
 
 import chess.*;
-import chess.pieces.Rook;
+import chess.pieces.*;
 
 /**
  * Used for testing your code
@@ -13,18 +13,36 @@ public class TestFactory {
     //------------------------------------------------------------------------------------------------------------------
     public static ChessBoard getNewBoard(){
         // FIXME
-        ChessBoard testBoard = new ChessBoardImp();
-		return testBoard;
+        return new ChessBoardImp();
     }
 
     public static ChessGame getNewGame(){
         // FIXME
-		return null;
+        return new ChessGameImp();
     }
 
     public static ChessPiece getNewPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type){
         // FIXME
-		return new ChessPieceImp(pieceColor, type);
+        String colour;
+        if (pieceColor == ChessGame.TeamColor.WHITE) {
+            colour = "w";
+        } else {
+            colour = "b";
+        }
+        if (type == ChessPiece.PieceType.KNIGHT) {
+            return new Knight(colour);
+        } else if (type == ChessPiece.PieceType.PAWN) {
+            return new Pawn(colour);
+        } else if (type == ChessPiece.PieceType.KING) {
+            return new King(colour);
+        } else if (type == ChessPiece.PieceType.ROOK) {
+            return new Rook(colour);
+        } else if (type == ChessPiece.PieceType.BISHOP) {
+            return new Bishop(colour);
+        } else if (type == ChessPiece.PieceType.QUEEN) {
+            return new Queen(colour);
+        }
+		return null;
     }
 
     public static ChessPosition getNewPosition(Integer row, Integer col){
@@ -34,7 +52,7 @@ public class TestFactory {
 
     public static ChessMove getNewMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece){
         // FIXME
-		return null;
+		return new ChessMoveImp(startPosition, endPosition, promotionPiece);
     }
     //------------------------------------------------------------------------------------------------------------------
 

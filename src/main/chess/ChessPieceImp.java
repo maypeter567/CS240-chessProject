@@ -1,5 +1,8 @@
 package chess;
 
+import chess.pieces.Knight;
+import chess.pieces.Pawn;
+
 import java.util.Collection;
 
 public class ChessPieceImp implements ChessPiece {
@@ -8,11 +11,6 @@ public class ChessPieceImp implements ChessPiece {
     protected ChessGame.TeamColor myColor;
     
     public ChessPieceImp() {
-    }
-    
-    public ChessPieceImp(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
-        this.myType = type;
-        this.myColor = pieceColor;
     }
     
     @Override

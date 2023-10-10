@@ -1,20 +1,59 @@
 package chess;
 
-public class ChessGameImp implements ChessBoard {
+import java.util.Collection;
+
+public class ChessGameImp implements ChessGame {
     
-    ChessGame.TeamColor teamColor;
-    @Override
-    public void addPiece(ChessPosition position, ChessPiece piece) {
+    protected ChessGame.TeamColor currentTurn;
+    protected ChessBoardImp myBoard;
     
+    public ChessGameImp() {
+        currentTurn = TeamColor.WHITE;
+        myBoard = new ChessBoardImp();
     }
     
     @Override
-    public ChessPiece getPiece(ChessPosition position) {
+    public TeamColor getTeamTurn() {
+        return currentTurn;
+    }
+    
+    @Override
+    public void setTeamTurn(TeamColor team) {
+        currentTurn = team;
+    }
+    
+    @Override
+    public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         return null;
     }
     
     @Override
-    public void resetBoard() {
+    public void makeMove(ChessMove move) throws InvalidMoveException {
     
+    }
+    
+    @Override
+    public boolean isInCheck(TeamColor teamColor) {
+        return false;
+    }
+    
+    @Override
+    public boolean isInCheckmate(TeamColor teamColor) {
+        return false;
+    }
+    
+    @Override
+    public boolean isInStalemate(TeamColor teamColor) {
+        return false;
+    }
+    
+    @Override
+    public void setBoard(ChessBoard board) {
+        myBoard.resetBoard();
+    }
+    
+    @Override
+    public ChessBoard getBoard() {
+        return myBoard;
     }
 }

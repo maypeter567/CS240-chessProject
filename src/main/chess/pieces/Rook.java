@@ -1,8 +1,9 @@
 package chess.pieces;
 
-import chess.ChessGame;
-import chess.ChessPieceImp;
-import chess.ChessPositionImp;
+import chess.*;
+
+import java.util.Collection;
+import java.util.Vector;
 
 public class Rook  extends ChessPieceImp {
     public Rook(String color) {
@@ -12,5 +13,85 @@ public class Rook  extends ChessPieceImp {
         } else if (color == "b") {
             this.myColor = ChessGame.TeamColor.BLACK;
         }
+    }
+    
+    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+        Vector<ChessMove> myVector = new Vector<>();
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+        ChessPositionImp mP = new ChessPositionImp(row, col);
+        rightHelper(board, mP, myVector, myPosition);
+        mP.setPosition(row, col);
+        leftHelper(board, mP, myVector, myPosition);
+        mP.setPosition(row, col);
+        upHelper(board, mP, myVector, myPosition);
+        mP.setPosition(row, col);
+        downHelper(board, mP, myVector, myPosition);
+        mP.setPosition(row, col);
+        return myVector;
+    }
+    
+    void rightHelper(ChessBoard board, ChessPositionImp testPosition, Collection<ChessMove> myVector, ChessPosition myPosition) {
+        testPosition.setPosition(testPosition.getRow(), testPosition.getColumn()+1);
+        if (isInBounds(testPosition)) {
+            ChessPiece piece = board.getPiece(testPosition);
+            if (piece != null) {
+                if (piece.getTeamColor() != this.myColor) {
+                    myVector.add(new ChessMoveImp(myPosition, testPosition, piece.getPieceType()));
+                }
+            } else {
+                myVector.add(new ChessMoveImp(myPosition, testPosition, null));
+                rightHelper(board, testPosition, myVector, myPosition);
+            }
+        }
+    }
+    
+    void leftHelper(ChessBoard board, ChessPositionImp testPosition, Collection<ChessMove> myVector, ChessPosition myPosition) {
+        testPosition.setPosition(testPosition.getRow(), testPosition.getColumn()-1);
+        if (isInBounds(testPosition)) {
+            ChessPiece piece = board.getPiece(testPosition);
+            if (piece != null) {
+                if (piece.getTeamColor() != this.myColor) {
+                    myVector.add(new ChessMoveImp(myPosition, testPosition, piece.getPieceType()));
+                }
+            } else {
+                myVector.add(new ChessMoveImp(myPosition, testPosition, null));
+                leftHelper(board, testPosition, myVector, myPosition);
+            }
+        }
+    }
+    
+    void downHelper(ChessBoard board, ChessPositionImp testPosition, Collection<ChessMove> myVector, ChessPosition myPosition) {
+        testPosition.setPosition(testPosition.getRow()-1, testPosition.getColumn());
+        if (isInBounds(testPosition)) {
+            ChessPiece piece = board.getPiece(testPosition);
+            if (piece != null) {
+                if (piece.getTeamColor() != this.myColor) {
+                    myVector.add(new ChessMoveImp(myPosition, testPosition, piece.getPieceType()));
+                }
+            } else {
+                myVector.add(new ChessMoveImp(myPosition, testPosition, null));
+                downHelper(board, testPosition, myVector, myPosition);
+            }
+        }
+    }
+    
+    void upHelper(ChessBoard board, ChessPositionImp testPosition, Collection<ChessMove> myVector, ChessPosition myPosition) {
+        testPosition.setPosition(testPosition.getRow()+1, testPosition.getColumn());
+        if (isInBounds(testPosition)) {
+            ChessPiece piece = board.getPiece(testPosition);
+            if (piece != null) {
+                if (piece.getTeamColor() != this.myColor) {
+                    myVector.add(new ChessMoveImp(myPosition, testPosition, piece.getPieceType()));
+                }
+            } else {
+                myVector.add(new ChessMoveImp(myPosition, testPosition, null));
+                upHelper(board, testPosition, myVector, myPosition);
+            }
+        }
+    }
+    
+    boolean isInBounds(ChessPositionImp testPosition) {
+        return testPosition.getRow() >= 0 && testPosition.getRow() <= 7 && testPosition.getColumn() >= 0 && testPosition.getColumn() <= 7;
     }
 }
