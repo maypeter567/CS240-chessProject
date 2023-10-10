@@ -8,7 +8,9 @@ public class ChessBoardImp implements ChessBoard {
     private final Vector<ChessPiece> boardSpaces = new Vector<>();
     
     public ChessBoardImp() {
-        boardSpaces.setSize(64);
+        for (int i = 0; i < 64; i++) {
+            boardSpaces.add(null);
+        }
     }
     
     @Override
@@ -32,50 +34,54 @@ public class ChessBoardImp implements ChessBoard {
     @Override
     public void resetBoard() {
         boardSpaces.clear();
+        for (int i = 0; i < 64; i++) {
+            boardSpaces.add(null);
+        }
         setUpBoard();
     }
     
     private void setUpBoard() {
-        int pieceNum = 1;
+        ChessPositionImp chessPosition = new ChessPositionImp(0, 0);
         for (int i = 0; i < 8; i++) {
-            addPiece(new ChessPositionImp(1, i), new Pawn(1, i, pieceNum));
-            pieceNum++;
-            addPiece(new ChessPositionImp(6, i), new Pawn(6, i,  pieceNum));
-            pieceNum++;
+            chessPosition.setPosition(1, i);
+            addPiece(chessPosition, new Pawn("w"));
+            chessPosition.setPosition(6, i);
+            addPiece(chessPosition, new Pawn("b"));
         }
-        addPiece(new ChessPositionImp(0, 0), new Rook(0, 0, pieceNum));
-        pieceNum++;
-        addPiece(new ChessPositionImp(0, 7), new Rook(0, 7, pieceNum));
-        pieceNum++;
-        addPiece(new ChessPositionImp(7, 0), new Rook(7, 0, pieceNum));
-        pieceNum++;
-        addPiece(new ChessPositionImp(7, 7), new Rook(7, 7, pieceNum));
-        pieceNum++;
+        chessPosition.setPosition(0, 0);
+        addPiece(chessPosition, new Rook("w"));
+        chessPosition.setPosition(0, 7);
+        addPiece(chessPosition, new Rook("w"));
+        chessPosition.setPosition(7, 0);
+        addPiece(chessPosition, new Rook("b"));
+        chessPosition.setPosition(7, 7);
+        addPiece(chessPosition, new Rook("b"));
         
-        addPiece(new ChessPositionImp(0, 1), new Bishop(0, 1, pieceNum));
-        pieceNum++;
-        addPiece(new ChessPositionImp(0, 6), new Bishop(0, 6, pieceNum));
-        pieceNum++;
-        addPiece(new ChessPositionImp(7, 1), new Bishop(7, 1, pieceNum));
-        pieceNum++;
-        addPiece(new ChessPositionImp(7, 6), new Bishop(7, 6, pieceNum));
-        pieceNum++;
+        chessPosition.setPosition(0, 2);
+        addPiece(chessPosition, new Bishop("w"));
+        chessPosition.setPosition(0, 5);
+        addPiece(chessPosition, new Bishop("w"));
+        chessPosition.setPosition(7, 2);
+        addPiece(chessPosition, new Bishop("b"));
+        chessPosition.setPosition(7, 5);
+        addPiece(chessPosition, new Bishop("b"));
         
-        addPiece(new ChessPositionImp(0, 2), new Knight(0, 2, pieceNum));
-        pieceNum++;
-        addPiece(new ChessPositionImp(0, 5), new Knight(0, 5, pieceNum));
-        pieceNum++;
-        addPiece(new ChessPositionImp(7, 2), new Knight(7, 2, pieceNum));
-        pieceNum++;
-        addPiece(new ChessPositionImp(7, 5), new Knight(7, 5, pieceNum));
-        pieceNum++;
+        chessPosition.setPosition(0, 1);
+        addPiece(chessPosition, new Knight("w"));
+        chessPosition.setPosition(0, 6);
+        addPiece(chessPosition, new Knight("w"));
+        chessPosition.setPosition(7, 1);
+        addPiece(chessPosition, new Knight("b"));
+        chessPosition.setPosition(7, 6);
+        addPiece(chessPosition, new Knight("b"));
         
-        addPiece(new ChessPositionImp(0, 3), new Queen(0, 3, pieceNum));
-        pieceNum++;
-        addPiece(new ChessPositionImp(7, 3), new Queen(7, 3, pieceNum));
-        pieceNum++;
-        addPiece(new ChessPositionImp(0, 4), new King(0, 4, pieceNum));
-        pieceNum++;
-        addPiece(new ChessPositionImp(7, 4), new King(7, 4, pieceNum));
+        chessPosition.setPosition(0, 3);
+        addPiece(chessPosition, new Queen("w"));
+        chessPosition.setPosition(7, 3);
+        addPiece(chessPosition, new Queen("b"));
+        chessPosition.setPosition(0, 4);
+        addPiece(chessPosition, new King("w"));
+        chessPosition.setPosition(7, 4);
+        addPiece(chessPosition, new King("b"));
     }
 }

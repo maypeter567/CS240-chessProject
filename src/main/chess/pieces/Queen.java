@@ -1,10 +1,16 @@
 package chess.pieces;
 
+import chess.ChessGame;
 import chess.ChessPieceImp;
+import chess.ChessPositionImp;
 
 public class Queen  extends ChessPieceImp {
-    public Queen(int row, int column, int number) {
-        this.myNumber = number;
-        this.myPosition.setPosition(row, column);
+    public Queen(String color) {
+        this.myType = PieceType.QUEEN;
+        if (color == "w") {
+            this.myColor = ChessGame.TeamColor.WHITE;
+        } else if (color == "b") {
+            this.myColor = ChessGame.TeamColor.BLACK;
+        }
     }
 }

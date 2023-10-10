@@ -1,6 +1,8 @@
 package chess;
 
 public class ChessGameImp implements ChessBoard {
+    
+    ChessGame.TeamColor teamColor;
     @Override
     public void addPiece(ChessPosition position, ChessPiece piece) {
     

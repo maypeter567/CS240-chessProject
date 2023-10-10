@@ -4,17 +4,25 @@ import java.util.Collection;
 
 public class ChessPieceImp implements ChessPiece {
     
-    public ChessPositionImp myPosition;
-    protected int myNumber;
+    protected PieceType myType;
+    protected ChessGame.TeamColor myColor;
+    
+    public ChessPieceImp() {
+    }
+    
+    public ChessPieceImp(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+        this.myType = type;
+        this.myColor = pieceColor;
+    }
     
     @Override
     public ChessGame.TeamColor getTeamColor() {
-        return null;
+        return this.myColor;
     }
     
     @Override
     public PieceType getPieceType() {
-        return null;
+        return this.myType;
     }
     
     @Override
