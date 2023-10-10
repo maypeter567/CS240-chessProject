@@ -8,9 +8,7 @@ public class ChessBoardImp implements ChessBoard {
     private final Vector<ChessPiece> boardSpaces = new Vector<>();
     
     public ChessBoardImp() {
-        for (int i = 0; i < 64; i++) {
-            boardSpaces.add(null);
-        }
+        resetBoard();
     }
     
     @Override
