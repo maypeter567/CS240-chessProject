@@ -20,22 +20,26 @@ public class Knight  extends ChessPieceImp {
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
         ChessPositionImp mP = new ChessPositionImp(row, col);
-        upRightHelper(board, mP, myVector, myPosition);
-        mP.setPosition(row, col);
-        upLeftHelper(board, mP, myVector, myPosition);
-        mP.setPosition(row, col);
-        downLeftHelper(board, mP, myVector, myPosition);
-        mP.setPosition(row, col);
-        downRightHelper(board, mP, myVector, myPosition);
-        mP.setPosition(row, col);
-        leftUpHelper(board, mP, myVector, myPosition);
-        mP.setPosition(row, col);
-        leftDownHelper(board, mP, myVector, myPosition);
-        mP.setPosition(row, col);
-        rightUpHelper(board, mP, myVector, myPosition);
-        mP.setPosition(row, col);
-        rightDownHelper(board, mP, myVector, myPosition);
-        mP.setPosition(row, col);
+        
+        var king = protectingKing(board, myPosition);
+        if (king == 0) {
+            upRightHelper(board, mP, myVector, myPosition);
+            mP.setPosition(row, col);
+            upLeftHelper(board, mP, myVector, myPosition);
+            mP.setPosition(row, col);
+            downLeftHelper(board, mP, myVector, myPosition);
+            mP.setPosition(row, col);
+            downRightHelper(board, mP, myVector, myPosition);
+            mP.setPosition(row, col);
+            leftUpHelper(board, mP, myVector, myPosition);
+            mP.setPosition(row, col);
+            leftDownHelper(board, mP, myVector, myPosition);
+            mP.setPosition(row, col);
+            rightUpHelper(board, mP, myVector, myPosition);
+            mP.setPosition(row, col);
+            rightDownHelper(board, mP, myVector, myPosition);
+            mP.setPosition(row, col);
+        }
         return myVector;
     }
     
@@ -45,11 +49,10 @@ public class Knight  extends ChessPieceImp {
             ChessPiece piece = board.getPiece(testPosition);
             if (piece != null) {
                 if (piece.getTeamColor() != this.myColor) {
-                    myVector.add(new ChessMoveImp(myPosition, testPosition, piece.getPieceType()));
+                    myVector.add(new ChessMoveImp(myPosition,  new ChessPositionImp (testPosition.getRow(), testPosition.getColumn()), null));
                 }
             } else {
-                myVector.add(new ChessMoveImp(myPosition, testPosition, null));
-                leftUpHelper(board, testPosition, myVector, myPosition);
+                myVector.add(new ChessMoveImp(myPosition,  new ChessPositionImp (testPosition.getRow(), testPosition.getColumn()), null));
             }
         }
     }
@@ -60,11 +63,10 @@ public class Knight  extends ChessPieceImp {
             ChessPiece piece = board.getPiece(testPosition);
             if (piece != null) {
                 if (piece.getTeamColor() != this.myColor) {
-                    myVector.add(new ChessMoveImp(myPosition, testPosition, piece.getPieceType()));
+                    myVector.add(new ChessMoveImp(myPosition,  new ChessPositionImp (testPosition.getRow(), testPosition.getColumn()), null));
                 }
             } else {
-                myVector.add(new ChessMoveImp(myPosition, testPosition, null));
-                leftDownHelper(board, testPosition, myVector, myPosition);
+                myVector.add(new ChessMoveImp(myPosition,  new ChessPositionImp (testPosition.getRow(), testPosition.getColumn()), null));
             }
         }
     }
@@ -75,11 +77,10 @@ public class Knight  extends ChessPieceImp {
             ChessPiece piece = board.getPiece(testPosition);
             if (piece != null) {
                 if (piece.getTeamColor() != this.myColor) {
-                    myVector.add(new ChessMoveImp(myPosition, testPosition, piece.getPieceType()));
+                    myVector.add(new ChessMoveImp(myPosition,  new ChessPositionImp (testPosition.getRow(), testPosition.getColumn()), null));
                 }
             } else {
-                myVector.add(new ChessMoveImp(myPosition, testPosition, null));
-                downLeftHelper(board, testPosition, myVector, myPosition);
+                myVector.add(new ChessMoveImp(myPosition,  new ChessPositionImp (testPosition.getRow(), testPosition.getColumn()), null));
             }
         }
     }
@@ -90,11 +91,10 @@ public class Knight  extends ChessPieceImp {
             ChessPiece piece = board.getPiece(testPosition);
             if (piece != null) {
                 if (piece.getTeamColor() != this.myColor) {
-                    myVector.add(new ChessMoveImp(myPosition, testPosition, piece.getPieceType()));
+                    myVector.add(new ChessMoveImp(myPosition,  new ChessPositionImp (testPosition.getRow(), testPosition.getColumn()), null));
                 }
             } else {
-                myVector.add(new ChessMoveImp(myPosition, testPosition, null));
-                downRightHelper(board, testPosition, myVector, myPosition);
+                myVector.add(new ChessMoveImp(myPosition,  new ChessPositionImp (testPosition.getRow(), testPosition.getColumn()), null));
             }
         }
     }
@@ -105,11 +105,10 @@ public class Knight  extends ChessPieceImp {
             ChessPiece piece = board.getPiece(testPosition);
             if (piece != null) {
                 if (piece.getTeamColor() != this.myColor) {
-                    myVector.add(new ChessMoveImp(myPosition, testPosition, piece.getPieceType()));
+                    myVector.add(new ChessMoveImp(myPosition,  new ChessPositionImp (testPosition.getRow(), testPosition.getColumn()), null));
                 }
             } else {
-                myVector.add(new ChessMoveImp(myPosition, testPosition, null));
-                rightUpHelper(board, testPosition, myVector, myPosition);
+                myVector.add(new ChessMoveImp(myPosition,  new ChessPositionImp (testPosition.getRow(), testPosition.getColumn()), null));
             }
         }
     }
@@ -120,11 +119,10 @@ public class Knight  extends ChessPieceImp {
             ChessPiece piece = board.getPiece(testPosition);
             if (piece != null) {
                 if (piece.getTeamColor() != this.myColor) {
-                    myVector.add(new ChessMoveImp(myPosition, testPosition, piece.getPieceType()));
+                    myVector.add(new ChessMoveImp(myPosition,  new ChessPositionImp (testPosition.getRow(), testPosition.getColumn()), null));
                 }
             } else {
-                myVector.add(new ChessMoveImp(myPosition, testPosition, null));
-                rightDownHelper(board, testPosition, myVector, myPosition);
+                myVector.add(new ChessMoveImp(myPosition,  new ChessPositionImp (testPosition.getRow(), testPosition.getColumn()), null));
             }
         }
     }
@@ -135,11 +133,10 @@ public class Knight  extends ChessPieceImp {
             ChessPiece piece = board.getPiece(testPosition);
             if (piece != null) {
                 if (piece.getTeamColor() != this.myColor) {
-                    myVector.add(new ChessMoveImp(myPosition, testPosition, piece.getPieceType()));
+                    myVector.add(new ChessMoveImp(myPosition,  new ChessPositionImp (testPosition.getRow(), testPosition.getColumn()), null));
                 }
             } else {
-                myVector.add(new ChessMoveImp(myPosition, testPosition, null));
-                upRightHelper(board, testPosition, myVector, myPosition);
+                myVector.add(new ChessMoveImp(myPosition,  new ChessPositionImp (testPosition.getRow(), testPosition.getColumn()), null));
             }
         }
     }
@@ -150,16 +147,24 @@ public class Knight  extends ChessPieceImp {
             ChessPiece piece = board.getPiece(testPosition);
             if (piece != null) {
                 if (piece.getTeamColor() != this.myColor) {
-                    myVector.add(new ChessMoveImp(myPosition, testPosition, piece.getPieceType()));
+                    myVector.add(new ChessMoveImp(myPosition,  new ChessPositionImp (testPosition.getRow(), testPosition.getColumn()), null));
                 }
             } else {
-                myVector.add(new ChessMoveImp(myPosition, testPosition, null));
-                upLeftHelper(board, testPosition, myVector, myPosition);
+                myVector.add(new ChessMoveImp(myPosition,  new ChessPositionImp (testPosition.getRow(), testPosition.getColumn()), null));
             }
         }
     }
     
     boolean isInBounds(ChessPositionImp testPosition) {
         return testPosition.getRow() >= 0 && testPosition.getRow() <= 7 && testPosition.getColumn() >= 0 && testPosition.getColumn() <= 7;
+    }
+    
+    @Override
+    public String toString() {
+        if (this.myColor == ChessGame.TeamColor.WHITE) {
+            return "N";
+        } else {
+            return "n";
+        }
     }
 }

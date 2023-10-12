@@ -8,7 +8,51 @@ public class ChessBoardImp implements ChessBoard {
     private final Vector<ChessPiece> boardSpaces = new Vector<>();
     
     public ChessBoardImp() {
-        resetBoard();
+        for (int i = 0; i < 64; i++) {
+            boardSpaces.add(null);
+        }
+    }
+    
+    
+    
+    public ChessBoardImp(ChessBoardImp oldBoard) {
+        var position = new ChessPositionImp(0,0);
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                position.setPosition(i, j);
+                var oldPiece = oldBoard.getPiece(position);
+                ChessPiece item;
+                if (oldPiece == null) {
+                    item = null;
+                } else {
+                    item = getNewPiece(oldPiece.getTeamColor(), oldPiece.getPieceType());
+                }
+                boardSpaces.add(item);
+            }
+        }
+    }
+    
+    public ChessPiece getNewPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type){
+        String colour;
+        if (pieceColor == ChessGame.TeamColor.WHITE) {
+            colour = "w";
+        } else {
+            colour = "b";
+        }
+        if (type == ChessPiece.PieceType.KNIGHT) {
+            return new Knight(colour);
+        } else if (type == ChessPiece.PieceType.PAWN) {
+            return new Pawn(colour);
+        } else if (type == ChessPiece.PieceType.KING) {
+            return new King(colour);
+        } else if (type == ChessPiece.PieceType.ROOK) {
+            return new Rook(colour);
+        } else if (type == ChessPiece.PieceType.BISHOP) {
+            return new Bishop(colour);
+        } else if (type == ChessPiece.PieceType.QUEEN) {
+            return new Queen(colour);
+        }
+        return null;
     }
     
     @Override
@@ -36,6 +80,18 @@ public class ChessBoardImp implements ChessBoard {
             boardSpaces.add(null);
         }
         setUpBoard();
+    }
+    
+    public void setPiece(ChessPosition toBeReplaced, ChessPosition toReplace) {
+        boardSpaces.set(toBeReplaced.getRow() * 8 + toBeReplaced.getColumn(), boardSpaces.get(toReplace.getRow() * 8 + toReplace.getColumn()));
+    }
+    
+    public void setPiece(ChessPosition toBeReplaced, ChessPiece toReplace) {
+        boardSpaces.set(toBeReplaced.getRow() * 8 + toBeReplaced.getColumn(), toReplace);
+    }
+    
+    public void clearPiece(ChessPosition position) {
+        boardSpaces.set(position.getRow() * 8 + position.getColumn(), null);
     }
     
     private void setUpBoard() {
@@ -81,5 +137,24 @@ public class ChessBoardImp implements ChessBoard {
         addPiece(chessPosition, new King("w"));
         chessPosition.setPosition(7, 4);
         addPiece(chessPosition, new King("b"));
+    }
+    
+    @Override
+    public String toString() {
+        int i = 0;
+        StringBuilder str = new StringBuilder();
+        for (var spot: this.boardSpaces) {
+            if (i%8 == 0) {
+                str.append("|\n");
+            }
+            if (spot == null) {
+                str.append("| ");
+            } else {
+                str.append("|");
+                str.append(spot);
+            }
+            i++;
+        }
+        return str.toString();
     }
 }

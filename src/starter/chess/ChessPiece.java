@@ -40,4 +40,6 @@ public interface ChessPiece {
      * @return Collection of valid moves
      */
     Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition);
+    
+    Collection<ChessMove> uniqueKingMoves(ChessBoard board, ChessPosition myPosition);
 }
