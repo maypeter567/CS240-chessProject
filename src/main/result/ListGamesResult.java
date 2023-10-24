@@ -1,7 +1,11 @@
 package result;
 
+import models.GameMod;
+
+import java.util.Vector;
+
 public class ListGamesResult {
-    private String games;
+    private Vector<GameMod> games;
     private String message;
     
     /**
@@ -9,11 +13,11 @@ public class ListGamesResult {
      */
     public ListGamesResult() {}
     
-    public String getGames() {
+    public Vector<GameMod> getGames() {
         return games;
     }
     
-    public void setGames(String games) {
+    public void setGames(Vector<GameMod> games) {
         this.games = games;
     }
     
