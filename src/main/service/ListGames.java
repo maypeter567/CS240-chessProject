@@ -5,8 +5,6 @@ import data_access.AuthDAO;
 import data_access.GameDAO;
 import models.AuthTokenMod;
 import models.GameMod;
-import request.ListGamesRequest;
-import result.CreateGameResult;
 import result.ListGamesResult;
 import spark.Response;
 

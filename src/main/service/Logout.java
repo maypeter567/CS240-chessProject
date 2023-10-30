@@ -2,12 +2,9 @@ package service;
 
 import dataAccess.DataAccessException;
 import data_access.AuthDAO;
-import data_access.UserDAO;
 import models.AuthTokenMod;
 import request.LogoutRequest;
-import result.LoginResult;
 import result.LogoutResult;
-import spark.Request;
 import spark.Response;
 
 public class Logout {

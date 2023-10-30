@@ -4,7 +4,6 @@ import chess.ChessGameImp;
 import dataAccess.DataAccessException;
 import models.GameMod;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 

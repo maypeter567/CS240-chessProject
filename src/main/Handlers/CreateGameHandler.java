@@ -2,18 +2,13 @@ package Handlers;
 
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
-import data_access.AuthDAO;
-import data_access.GameDAO;
 import models.AuthTokenMod;
-import models.GameMod;
 import request.CreateGameRequest;
 import result.CreateGameResult;
 import service.CreateGame;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-
-import java.util.Objects;
 
 public class CreateGameHandler implements Route {
     public Object createGame(Request req, Response res) throws DataAccessException {
@@ -39,9 +34,3 @@ public class CreateGameHandler implements Route {
         return createGame(request, response);
     }
 }
-
-
-//        Gson serializer = new Gson();
-//        CreateGameRequest gameRequest = serializer.fromJson(req.body(), CreateGameRequest.class);
-
-//        var test = serializer.toJson(gameRequest);

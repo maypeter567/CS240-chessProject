@@ -2,12 +2,10 @@ package service;
 
 import dataAccess.DataAccessException;
 import data_access.AuthDAO;
-import data_access.GameDAO;
 import data_access.UserDAO;
 import models.AuthTokenMod;
 import models.UserMod;
 import request.RegisterRequest;
-import result.CreateGameResult;
 import result.RegisterResult;
 import spark.Response;
 

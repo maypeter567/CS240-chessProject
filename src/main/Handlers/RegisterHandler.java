@@ -9,23 +9,7 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
-import java.util.Objects;
-
 public class RegisterHandler implements Route {
-    
-    public Object register(Request req, Response res) throws DataAccessException {
-        Gson serializer = new Gson();
-        RegisterRequest registerRequest = serializer.fromJson(req.body(), RegisterRequest.class);
-
-        res.type("application/json");
-
-        RegisterResult result = new Register().register(registerRequest, res);
-        if (Objects.equals(res.type(), "200")) {
-            return serializer.toJson(result);
-        } else {
-            return serializer.toJson(result);
-        }
-    }
     
     @Override
     public Object handle(Request request, Response response) throws Exception {
