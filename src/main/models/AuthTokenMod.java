@@ -22,4 +22,5 @@ public class AuthTokenMod {
     public String getUsername() {
         return username;
     }
+    
 }

@@ -1,7 +1,7 @@
 package result;
 
 public class JoinResult {
-    private String Message;
+    private String message;
     
     /**
      * join only expects message values
@@ -9,10 +9,10 @@ public class JoinResult {
     public JoinResult() {}
     
     public String getMessage() {
-        return Message;
+        return message;
     }
     
     public void setMessage(String message) {
-        Message = message;
+        this.message = message;
     }
 }

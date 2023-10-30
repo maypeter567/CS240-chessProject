@@ -1,5 +1,7 @@
 package result;
 
+import models.AuthTokenMod;
+
 public class RegisterResult {
     private String username;
     private String authToken;

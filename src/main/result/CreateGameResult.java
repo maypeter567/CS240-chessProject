@@ -1,19 +1,23 @@
 package result;
 
 public class CreateGameResult {
-    private String gameID;
+    private Integer gameID;
     private String message;
     
     /**
-     * gameID and message are the expected return values for CreateGame
+     * gameID and is the expected return value for CreateGame
      */
     public CreateGameResult() {}
     
-    public String getGameID() {
+    public CreateGameResult(int gameID, String message) {
+        this.gameID = gameID;
+    }
+    
+    public int getGameID() {
         return gameID;
     }
     
-    public void setGameID(String gameID) {
+    public void setGameID(int gameID) {
         this.gameID = gameID;
     }
     

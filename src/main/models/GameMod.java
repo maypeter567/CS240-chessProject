@@ -4,9 +4,9 @@ import chess.ChessGameImp;
 
 public class GameMod {
     private final int gameID;
-    private final String whiteUserName;
-    private final String blackUserName;
-    private final String gameName;
+    private String whiteUsername;
+    private String blackUsername;
+    private String gameName;
     private final ChessGameImp game;
     
     /**
@@ -20,20 +20,28 @@ public class GameMod {
      */
     public GameMod(int gameID, String whiteUserName, String blackUserName, String gameName, ChessGameImp game) {
         this.gameID = gameID;
-        this.whiteUserName = whiteUserName;
-        this.blackUserName = blackUserName;
+        this.whiteUsername = whiteUserName;
+        this.blackUsername = blackUserName;
         this.gameName = gameName;
         this.game = game;
     }
     
     public int getGameID() { return gameID; }
     
-    public String getWhiteUserName() {
-        return whiteUserName;
+    public String getWhiteUsername() {
+        return whiteUsername;
     }
     
-    public String getBlackUserName() {
-        return blackUserName;
+    public void setWhiteUsername(String username) {
+        this.whiteUsername = username;
+    }
+    
+    public String getBlackUsername() {
+        return blackUsername;
+    }
+    
+    public void setBlackUsername(String username) {
+        this.blackUsername = username;
     }
     
     public String getGameName() {

@@ -6,7 +6,9 @@ public class ClearResult {
     /**
      * only a message can be returned for this class
      */
-    public ClearResult() {}
+    public ClearResult() {
+        message = "Success";
+    }
     public String getMessage() {
         return message;
     }

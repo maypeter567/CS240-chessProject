@@ -5,7 +5,7 @@ import models.AuthTokenMod;
 public class JoinRequest {
     private AuthTokenMod authToken;
     private String playerColor;
-    private String gameID;
+    private int gameID;
     
     /**
      * Join request class keeps track of authToken, playerColor, and gameID for requests
@@ -28,11 +28,11 @@ public class JoinRequest {
         this.playerColor = playerColor;
     }
     
-    public String getGameID() {
+    public int getGameID() {
         return gameID;
     }
     
-    public void setGameID(String gameID) {
+    public void setGameID(int gameID) {
         this.gameID = gameID;
     }
 }
