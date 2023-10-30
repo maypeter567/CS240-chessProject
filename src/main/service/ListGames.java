@@ -8,24 +8,25 @@ import models.GameMod;
 import result.ListGamesResult;
 import spark.Response;
 
+import java.util.Stack;
 import java.util.Vector;
 
 public class ListGames {
-    public ListGamesResult listGames(AuthTokenMod authToken, Response res) throws DataAccessException {
+    public ListGamesResult listGames(AuthTokenMod authToken, Stack<Integer> res) throws DataAccessException {
         GameDAO gameDAO = new GameDAO();
         AuthDAO authDAO = new AuthDAO();
         ListGamesResult listGamesResult = new ListGamesResult();
         
         if (!authDAO.checkVerified(authToken)) {
             listGamesResult.setMessage("Error: unauthorized");
-            res.status(401);
+            res.push(401);
             return listGamesResult;
         }
         
         var map = gameDAO.findAll();
         Vector<GameMod> vector = new Vector<>(map.values());
         
-        res.status(200);
+        res.push(200);
         listGamesResult.setGames(vector);
         return listGamesResult;
     }

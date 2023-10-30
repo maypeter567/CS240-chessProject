@@ -10,6 +10,8 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+import java.util.Stack;
+
 public class CreateGameHandler implements Route {
     public Object createGame(Request req, Response res) throws DataAccessException {
         Gson serializer = new Gson();
@@ -18,14 +20,16 @@ public class CreateGameHandler implements Route {
         
         res.type("application/json");
         
+        Stack<Integer> stack = new Stack<Integer>();
+        
         CreateGameResult result;
         try {
-            result = new CreateGame().createGame(createGameRequest, authToken, res);
+            result = new CreateGame().createGame(createGameRequest, authToken, stack);
         } catch (DataAccessException e) {
             result = new CreateGameResult();
             result.setMessage(e.getMessage());
         }
-        
+        res.status(stack.lastElement());
         return serializer.toJson(result);
     }
     

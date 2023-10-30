@@ -7,17 +7,18 @@ import models.AuthTokenMod;
 import models.GameMod;
 import request.CreateGameRequest;
 import result.CreateGameResult;
-import spark.Response;
+
+import java.util.Stack;
 
 public class CreateGame {
-    public CreateGameResult createGame(CreateGameRequest request, AuthTokenMod authToken, Response res) throws DataAccessException { // accesses database
+    public CreateGameResult createGame(CreateGameRequest request, AuthTokenMod authToken, Stack<Integer> res) throws DataAccessException { // accesses database
         GameDAO gameDAO = new GameDAO();
         AuthDAO authDAO = new AuthDAO();
         CreateGameResult createGameResult = new CreateGameResult();
         
         if (!authDAO.checkVerified(authToken)) {
             createGameResult.setMessage("Error: unauthorized");
-            res.status(401);
+            res.push(401);
             return createGameResult;
         }
         
@@ -26,10 +27,10 @@ public class CreateGame {
         
         if (newGame == null) {
             createGameResult.setMessage("Error: game failed to be made");
-            res.status(400);
+            res.push(400);
         } else {
             createGameResult.setGameID(gameID);
-            res.status(200);
+            res.push(200);
         }
         return createGameResult;
     }

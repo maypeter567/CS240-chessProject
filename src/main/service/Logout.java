@@ -7,24 +7,26 @@ import request.LogoutRequest;
 import result.LogoutResult;
 import spark.Response;
 
+import java.util.Stack;
+
 public class Logout {
-    public LogoutResult logout(LogoutRequest request, AuthTokenMod authToken, Response res) throws DataAccessException {
+    public LogoutResult logout(LogoutRequest request, AuthTokenMod authToken, Stack<Integer> res) throws DataAccessException {
         AuthDAO authDAO = new AuthDAO();
         LogoutResult logoutResult = new LogoutResult();
         
         if (!authDAO.checkVerified(authToken)) {
             logoutResult.setMessage("Error: unauthorized");
-            res.status(401);
+            res.push(401);
             return logoutResult;
         }
         
         authDAO.logout(authToken);
         if (authDAO.checkVerified(authToken)) {
-            res.status(401);
+            res.push(401);
             logoutResult.setMessage("Error: logout failed");
             return logoutResult;
         } else {
-            res.status(200);
+            res.push(200);
             return logoutResult;
         }
     }

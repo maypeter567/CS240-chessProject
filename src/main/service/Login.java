@@ -9,9 +9,10 @@ import result.LoginResult;
 import spark.Response;
 
 import java.util.Objects;
+import java.util.Stack;
 
 public class Login {
-    public LoginResult login(LoginRequest request, Response res) throws DataAccessException {
+    public LoginResult login(LoginRequest request, Stack<Integer> res) throws DataAccessException {
         UserDAO userDAO = new UserDAO();
         AuthDAO authDAO = new AuthDAO();
         LoginResult loginResult = new LoginResult();
@@ -19,17 +20,17 @@ public class Login {
         if (userDAO.containsUser(request.getUsername())) {
             UserMod user = userDAO.findUser(request.getUsername());
             if (Objects.equals(user.getPassword(), request.getPassword())) {
-                res.status(200);
+                res.push(200);
                 loginResult.setAuthToken(authDAO.getAuthToken(user.getUsername()).getAuthToken());
                 loginResult.setUsername(request.getUsername());
                 return loginResult;
             } else {
-                res.status(401);
+                res.push(401);
                 loginResult.setMessage("Error: unauthorized");
                 return loginResult;
             }
         } else {
-            res.status(401);
+            res.push(401);
             loginResult.setMessage("Error: unauthorized");
             return loginResult;
         }
