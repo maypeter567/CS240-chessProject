@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class AuthDAO {
     
-    static Map<String, String> tokens = new HashMap<>();
+    private static final Map<String, String> tokens = new HashMap<>();
     
     /**
      * returns an authentication token from the database.
@@ -61,8 +61,6 @@ public class AuthDAO {
     }
     
     public void clear() {
-        if (!(tokens == null)) {
-            tokens.clear();
-        }
+        tokens.clear();
     }
 }

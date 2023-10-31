@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class UserDAO {
     
-    private static Map<String, UserMod> users = new HashMap<>();
+    private final static Map<String, UserMod> users = new HashMap<>();
     
     /**
      * this function clears the local and database list of users for testing purposes.
@@ -16,9 +16,7 @@ public class UserDAO {
      * @throws DataAccessException the function might fail to access the database.
      */
     public void clear() throws DataAccessException {
-        if (!(users == null)) {
-            users.clear();
-        }
+        users.clear();
     }
     
     /**

@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class GameDAO {
     
-    static Map<Integer, GameMod> games = new HashMap<>();
+    private final static Map<Integer, GameMod> games = new HashMap<>();
     static int i = 0;
     
     /**
@@ -80,8 +80,6 @@ public class GameDAO {
     }
     
     public void clear() {
-        if (!(games == null)) {
-            games.clear();
-        }
+        games.clear();
     }
 }
