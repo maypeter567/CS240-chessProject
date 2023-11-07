@@ -3,13 +3,12 @@ package data_access;
 import dataAccess.DataAccessException;
 import models.AuthTokenMod;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.sql.*;
 
 public class AuthDAO {
-    
-    private static final Map<String, String> tokens = new HashMap<>();
+    static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306", "root", "mysqlNBZIEN12!");
+    }
     
     /**
      * returns an authentication token from the database.
@@ -19,9 +18,29 @@ public class AuthDAO {
      * @throws DataAccessException if the authorization request is denied
      */
     public final AuthTokenMod getAuthToken(String username) throws DataAccessException {
-        String AuthToken = AuthTokenGenerator();
-        tokens.put(AuthToken, username);
-        return new AuthTokenMod(AuthToken, username);
+        try(var conn = getConnection()) {
+        
+            conn.setCatalog("chess");
+            
+            var createNewAuthToken = """
+                INSERT INTO authTokens (username) VALUES (?)
+                """;
+//            System.out.println(createNewAuthToken);
+            
+            try(var preparedStatement = conn.prepareStatement(createNewAuthToken, Statement.RETURN_GENERATED_KEYS)) {
+                preparedStatement.setString(1, username);
+                preparedStatement.executeUpdate();
+                
+                var authToken = preparedStatement.getGeneratedKeys();
+                if (authToken.next()) {
+                    return new AuthTokenMod(authToken.getString(1), username);
+                } else {
+                    throw new DataAccessException("authorization was not granted by database");
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
     }
     
     /**
@@ -32,35 +51,115 @@ public class AuthDAO {
      * @throws DataAccessException if token doesn't exist in database
      */
     public final boolean checkVerified(AuthTokenMod token) throws DataAccessException {
-        if (token == null) {
-            return false;
+        try(var conn = getConnection()) {
+            
+            conn.setCatalog("chess");
+            
+            var checkAuthToken = """
+                SELECT authTokenValue, username FROM authTokens WHERE authTokenValue=?
+                """;
+//            System.out.println(createNewAuthToken);
+            
+            try(var preparedStatement = conn.prepareStatement(checkAuthToken)) {
+                preparedStatement.setString(1, token.getAuthToken());
+                var rs = preparedStatement.executeQuery();
+                
+                if (rs.next()) {
+                    var id = rs.getString("authTokenValue");
+                    var name = rs.getString("username");
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (SQLException e) {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
         }
-        return tokens.containsKey(token.getAuthToken());
     }
     
     public void logout(AuthTokenMod token) throws DataAccessException {
         if (token == null) {
             throw new DataAccessException("The authorization token wasn't passed into the function");
         } else {
-            tokens.remove(token.getAuthToken());
+            try (var conn = getConnection()) {
+                
+                conn.setCatalog("chess");
+                
+                var deleteAuthToken = """
+                        DELETE FROM authTokens WHERE authTokenValue=?
+                        """;
+//            System.out.println(createNewAuthToken);
+                
+                try (var preparedStatement = conn.prepareStatement(deleteAuthToken)) {
+                    preparedStatement.setString(1, token.getAuthToken());
+                    var rs = preparedStatement.executeUpdate();
+                }
+            } catch (SQLException e) {
+                throw new DataAccessException(e.getMessage());
+            }
         }
     }
     
     public String getUsername(AuthTokenMod token) throws DataAccessException {
         if (token == null) {
             throw new DataAccessException("The authorization token wasn't passed into the function");
-        } else if (checkVerified(token)) {
-            return tokens.get(token.getAuthToken());
         } else {
-            return null;
+            try (var conn = getConnection()) {
+                
+                conn.setCatalog("chess");
+                
+                var checkAuthToken = """
+                                
+                                SELECT authTokenValue, username FROM authTokens WHERE authTokenValue=?
+                        """;
+//            System.out.println(createNewAuthToken);
+                
+                try (var preparedStatement = conn.prepareStatement(checkAuthToken)) {
+                    preparedStatement.setString(1, token.getAuthToken());
+                    var rs = preparedStatement.executeQuery();
+                    
+                    if (rs.next()) {
+                        var id = rs.getString("authTokenValue");
+                        var name = rs.getString("username");
+                        return name;
+                    } else {
+                        return null;
+                    }
+                }
+            } catch (SQLException e) {
+                throw new DataAccessException(e.getMessage());
+            }
         }
     }
     
-    private String AuthTokenGenerator() {
-        return UUID.randomUUID().toString();
-    }
-    
-    public void clear() {
-        tokens.clear();
+    public void clear() throws DataAccessException {
+        try (var conn = getConnection()) {
+            
+            conn.setCatalog("chess");
+            
+            var checkAuthToken = """
+                                DROP TABLE IF EXISTS authTokens
+                        """;
+//            System.out.println(createNewAuthToken);
+            
+            try (var preparedStatement = conn.prepareStatement(checkAuthToken)) {
+                preparedStatement.executeUpdate();
+            }
+            
+            var createAuthTable = """
+                    CREATE TABLE IF NOT EXISTS authTokens (
+                    authTokenValue int NOT NULL AUTO_INCREMENT,
+                    username VARCHAR(225) NOT NULL,
+                    PRIMARY KEY (authTokenValue)
+                    )""";
+            
+            try (var createTableStatement = conn.prepareStatement(createAuthTable)) {
+                createTableStatement.executeUpdate();
+            }
+        } catch (SQLException e){
+            throw new DataAccessException(e.getMessage());
+        }
     }
 }

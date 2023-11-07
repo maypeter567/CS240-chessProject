@@ -68,8 +68,12 @@ class ServiceTests {
             throw new RuntimeException(e);
         }
         
-        if (userDAO.containsUser("test3")) {
-            Assertions.fail("userDAO clear did not clear properly");
+        try {
+            if (userDAO.containsUser("test3")) {
+                Assertions.fail("userDAO clear did not clear properly");
+            }
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
         }
     }
     

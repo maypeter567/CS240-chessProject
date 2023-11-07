@@ -3,10 +3,65 @@ package server;
 import Handlers.*;
 import spark.*;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 public class Server{
     public static void main(String[] args) {
         var server = new Server();
+        try {
+            server.configureDatabase();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         server.run();
+    }
+    
+    static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306", "root", "mysqlNBZIEN12!");
+    }
+    
+    public static void configureDatabase() throws SQLException {
+        try (var conn = getConnection()) {
+            var createDbStatement = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS chess");
+            createDbStatement.executeUpdate();
+            
+            conn.setCatalog("chess");
+            
+            var createUserTable = """
+                CREATE TABLE IF NOT EXISTS users (
+                name VARCHAR(225) NOT NULL,
+                userMod TEXT NOT NULL,
+                PRIMARY KEY (name)
+            )""";
+            
+            try (var createTableStatement = conn.prepareStatement(createUserTable)) {
+                createTableStatement.executeUpdate();
+            }
+            
+            var createGameTable = """
+                    CREATE TABLE IF NOT EXISTS games (
+                    gameID int NOT NULL AUTO_INCREMENT,
+                    gameMod TEXT NOT NULL,
+                    PRIMARY KEY (gameID)
+                    )""";
+            
+            try (var createTableStatement = conn.prepareStatement(createGameTable)) {
+                createTableStatement.executeUpdate();
+            }
+            
+            var createAuthTable = """
+                    CREATE TABLE IF NOT EXISTS authTokens (
+                    authTokenValue int NOT NULL AUTO_INCREMENT,
+                    username VARCHAR(225) NOT NULL,
+                    PRIMARY KEY (authTokenValue)
+                    )""";
+            
+            try (var createTableStatement = conn.prepareStatement(createAuthTable)) {
+                createTableStatement.executeUpdate();
+            }
+        }
     }
     
     public void run() {
