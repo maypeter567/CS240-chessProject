@@ -63,15 +63,31 @@ class AuthDAOTest {
             
             conn.setCatalog("chess");
             
-//            var checkAuthToken = """
-//                                DROP TABLE IF EXISTS authTokens
-//                        """;
-
-//            try (var preparedStatement = conn.prepareStatement(checkAuthToken)) {
-//                preparedStatement.executeUpdate();
-//            }
-            
-            Assertions.assertThrows(RuntimeException.class, (Executable) authDAO.getAuthToken(null));
+            for (int i = 0; i < 15; i++) {
+                authDAO.clear();
+                var authToken = authDAO.getAuthToken("test1");
+                
+                conn.setCatalog("chess");
+                
+                var testAuthToken = """
+                SELECT authTokenValue, username FROM authTokens WHERE authTokenValue=?
+                """;
+                
+                try(var preparedStatement = conn.prepareStatement(testAuthToken)) {
+                    preparedStatement.setString(1, authToken.getAuthToken());
+                    var rs = preparedStatement.executeQuery();
+                    
+                    if (rs.next()) {
+                        var id = rs.getString("authTokenValue");
+                        var name = rs.getString("username");
+                        
+                        Assertions.assertEquals(id, authToken.getAuthToken());
+                        
+                    } else {
+                        Assertions.fail("the authToken was never made");
+                    }
+                }
+            }
             
         } catch (DataAccessException | SQLException e) {
             throw new RuntimeException(e.getMessage());
@@ -136,7 +152,13 @@ class AuthDAOTest {
             
             conn.setCatalog("chess");
             
-//            Assertions.assertThrows(authDAO.logout(null), DataAccessException.class);
+            assertThrows(
+                    DataAccessException.class, // replace with the expected type of the exception
+                    () -> {
+                        authDAO.logout(null);
+                    }
+            );
+            
         } catch (SQLException | DataAccessException e){
             throw new RuntimeException(e.getMessage());
         }

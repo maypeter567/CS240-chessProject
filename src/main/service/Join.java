@@ -40,6 +40,7 @@ public class Join {
             if (game.getWhiteUsername() == null) {
                 game.setWhiteUsername(authToken.getUsername());
                 joinResult.setMessage("you are now the white player");
+                gameDAO.updateGame(game.getGameID(), game);
                 res.push(200);
             } else {
                 joinResult.setMessage("Error: player colour already taken");
@@ -50,6 +51,7 @@ public class Join {
             if (game.getBlackUsername() == null) {
                 game.setBlackUsername(authToken.getUsername());
                 joinResult.setMessage("you are now the black player");
+                gameDAO.updateGame(game.getGameID(), game);
                 res.push(200);
                 return joinResult;
             } else {

@@ -4,6 +4,7 @@ import dataAccess.DataAccessException;
 import models.AuthTokenMod;
 
 import java.sql.*;
+import java.util.Objects;
 
 public class AuthDAO {
     static Connection getConnection() throws SQLException {
@@ -67,7 +68,11 @@ public class AuthDAO {
                 if (rs.next()) {
                     var id = rs.getString("authTokenValue");
                     var name = rs.getString("username");
-                    return true;
+                    if (Objects.equals(id, token.getAuthToken())) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 } else {
                     return false;
                 }

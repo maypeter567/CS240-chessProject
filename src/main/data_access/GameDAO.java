@@ -1,23 +1,20 @@
 package data_access;
 
 import chess.*;
+import chess.pieces.*;
 import com.google.gson.*;
 import dataAccess.DataAccessException;
-import dataAccess.Database;
-import models.AuthTokenMod;
 import models.GameMod;
 
 import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GameDAO {
     
-    private final static Map<Integer, GameMod> games = new HashMap<>();
     static int i = 0;
     
     static Connection getConnection() throws SQLException {
@@ -65,6 +62,7 @@ public class GameDAO {
      * @throws DataAccessException throws if the game doesn't exist, or connection error
      */
     public final GameMod find(int gameID) throws DataAccessException {
+        
         try(var conn = getConnection()) {
             
             conn.setCatalog("chess");
@@ -79,8 +77,7 @@ public class GameDAO {
                 var rs = preparedStatement.executeQuery();
                 
                 if (rs.next()) {
-                    Gson gson = new Gson();
-                    return gson.fromJson(rs.getString("gameMod"), GameMod.class);
+                    return deserializer(rs.getString("gameMod"));
                 } else {
                     return null;
                 }
@@ -112,8 +109,7 @@ public class GameDAO {
                 var rs = preparedStatement.executeQuery();
                 
                 while (rs.next()) {
-                    Gson gson = new Gson();
-                    allGames.put(Integer.parseInt(rs.getString("gameID")),gson.fromJson(rs.getString("gameMod"), GameMod.class));
+                    allGames.put(Integer.parseInt(rs.getString("gameID")), deserializer(rs.getString("gameMod")));
                 }
                 return allGames;
             }
@@ -136,11 +132,31 @@ public class GameDAO {
     /**
      * updates the gameID to another value in the database
      *
-     * @param gameID the new value to be added
+     * @param game the updated game
+     * @param gameID the id of the game stored in the database
      * @throws DataAccessException if the game doesn't exist, or the game is unmodifiable
      */
-    public final void updateGame(String gameID) throws DataAccessException {
-        throw new DataAccessException("this is not implemented");
+    public final void updateGame(int gameID, GameMod game) throws DataAccessException {
+        if (find(gameID) == null) {
+            throw new DataAccessException("the game you are trying to update doesn't exist");
+        }
+        String jsonGame = new Gson().toJson(game);
+        
+        try (var conn = getConnection()) {
+            conn.setCatalog("chess");
+            
+            var updateGame = """
+                UPDATE games SET gameMod = ? WHERE gameID = ?;
+                """;
+            
+            try (var preparedStatement = conn.prepareStatement(updateGame)) {
+                preparedStatement.setString(1, jsonGame);
+                preparedStatement.setString(2, Integer.toString(gameID));
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        }
     }
     
     public int createNewGame(String gameName) throws DataAccessException {
@@ -183,10 +199,20 @@ public class GameDAO {
         }
     }
     
-    private ChessGameImp deserializer(String stringToChange) {
+    private GameMod deserializer(String stringToChange) {
         GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeAdapter(ChessBoard.class, new BoardAdapter());
-        return gsonBuilder.create().fromJson(stringToChange); // I WAS WORKING HERE
+                .registerTypeAdapter(ChessGameImp.class, new GameAdapter());
+        return gsonBuilder.create().fromJson(stringToChange, GameMod.class); // I WAS WORKING HERE
+    }
+    
+    private class GameAdapter implements JsonDeserializer<ChessGameImp> {
+        
+        @Override
+        public ChessGameImp deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            GsonBuilder gsonBuilder = new GsonBuilder()
+                    .registerTypeAdapter(ChessBoardImp.class, new BoardAdapter());
+            return gsonBuilder.create().fromJson(jsonElement, ChessGameImp.class);
+        }
     }
     
     private class BoardAdapter implements JsonDeserializer<ChessBoard> {
@@ -203,9 +229,16 @@ public class GameDAO {
         
         @Override
         public ChessPiece deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            GsonBuilder gson = new GsonBuilder();
             String pieceType = jsonElement.getAsJsonObject().get("type").getAsString();
-            // make a switch case or chain of if statements that will determine the class to generate from the piece
-            return null;
+            return switch (pieceType) {
+                case "QUEEN" -> gson.create().fromJson(jsonElement, Queen.class);
+                case "KING" -> gson.create().fromJson(jsonElement, King.class);
+                case "KNIGHT" -> gson.create().fromJson(jsonElement, Knight.class);
+                case "BISHOP" -> gson.create().fromJson(jsonElement, Bishop.class);
+                case "ROOK" -> gson.create().fromJson(jsonElement, Rook.class);
+                default -> gson.create().fromJson(jsonElement, Pawn.class);
+            };
         }
     }
 }
