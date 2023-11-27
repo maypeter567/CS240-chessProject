@@ -7,7 +7,6 @@ import models.AuthTokenMod;
 import models.UserMod;
 import request.RegisterRequest;
 import result.RegisterResult;
-import spark.Response;
 
 import java.util.Stack;
 

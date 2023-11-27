@@ -2,13 +2,9 @@ package databaseTests;
 
 import dataAccess.DataAccessException;
 import data_access.AuthDAO;
-import data_access.GameDAO;
-import data_access.UserDAO;
 import models.AuthTokenMod;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -6,7 +6,6 @@ import data_access.GameDAO;
 import models.AuthTokenMod;
 import models.GameMod;
 import result.ListGamesResult;
-import spark.Response;
 
 import java.util.Stack;
 import java.util.Vector;

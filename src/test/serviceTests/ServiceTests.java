@@ -2,7 +2,6 @@ package serviceTests;
 
 import dataAccess.DataAccessException;
 import data_access.*;
-import jdk.jfr.Registered;
 import models.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +10,6 @@ import service.*;
 import request.*;
 import result.*;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Stack;
 

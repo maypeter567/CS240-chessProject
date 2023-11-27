@@ -2,13 +2,11 @@ package data_access;
 
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
-import models.AuthTokenMod;
 import models.UserMod;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 

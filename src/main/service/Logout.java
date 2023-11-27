@@ -5,7 +5,6 @@ import data_access.AuthDAO;
 import models.AuthTokenMod;
 import request.LogoutRequest;
 import result.LogoutResult;
-import spark.Response;
 
 import java.util.Stack;
 

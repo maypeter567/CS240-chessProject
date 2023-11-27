@@ -1,7 +1,6 @@
 package Handlers;
 
 import com.google.gson.Gson;
-import dataAccess.DataAccessException;
 import models.AuthTokenMod;
 import request.ListGamesRequest;
 import result.ListGamesResult;
@@ -10,7 +9,6 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
-import java.util.Objects;
 import java.util.Stack;
 
 public class ListGamesHandler implements Route {

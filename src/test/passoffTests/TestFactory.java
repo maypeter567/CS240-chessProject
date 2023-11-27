@@ -5,24 +5,20 @@ import chess.pieces.*;
 
 /**
  * Used for testing your code
- * Add in code using your classes for each method for each FIXME
  */
 public class TestFactory {
 
     //Chess Functions
     //------------------------------------------------------------------------------------------------------------------
     public static ChessBoard getNewBoard(){
-        // FIXME
         return new ChessBoardImp();
     }
 
     public static ChessGame getNewGame(){
-        // FIXME
         return new ChessGameImp();
     }
 
     public static ChessPiece getNewPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type){
-        // FIXME
         String colour;
         if (pieceColor == ChessGame.TeamColor.WHITE) {
             colour = "w";
@@ -46,12 +42,10 @@ public class TestFactory {
     }
 
     public static ChessPosition getNewPosition(Integer row, Integer col){
-        // FIXME
 		return new ChessPositionImp(row-1, col-1);
     }
 
     public static ChessMove getNewMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece){
-        // FIXME
 		return new ChessMoveImp(startPosition, endPosition, promotionPiece);
     }
     //------------------------------------------------------------------------------------------------------------------

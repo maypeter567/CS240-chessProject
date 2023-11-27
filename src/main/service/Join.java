@@ -7,7 +7,6 @@ import models.AuthTokenMod;
 import models.GameMod;
 import request.JoinRequest;
 import result.JoinResult;
-import spark.Response;
 
 import java.util.Objects;
 import java.util.Stack;

@@ -202,7 +202,7 @@ public class GameDAO {
     private GameMod deserializer(String stringToChange) {
         GsonBuilder gsonBuilder = new GsonBuilder()
                 .registerTypeAdapter(ChessGameImp.class, new GameAdapter());
-        return gsonBuilder.create().fromJson(stringToChange, GameMod.class); // I WAS WORKING HERE
+        return gsonBuilder.create().fromJson(stringToChange, GameMod.class);
     }
     
     private class GameAdapter implements JsonDeserializer<ChessGameImp> {

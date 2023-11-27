@@ -6,7 +6,6 @@ import data_access.UserDAO;
 import models.UserMod;
 import request.LoginRequest;
 import result.LoginResult;
-import spark.Response;
 
 import java.util.Objects;
 import java.util.Stack;
