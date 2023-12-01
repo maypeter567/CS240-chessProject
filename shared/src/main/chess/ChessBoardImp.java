@@ -13,8 +13,6 @@ public class ChessBoardImp implements ChessBoard {
         }
     }
     
-    
-    
     public ChessBoardImp(ChessBoardImp oldBoard) {
         var position = new ChessPositionImp(0,0);
         for (int i = 0; i < 8; i++) {
@@ -156,5 +154,39 @@ public class ChessBoardImp implements ChessBoard {
             i++;
         }
         return str.toString();
+    }
+    
+    public String toStringUnique(boolean white) {
+        if (white) {
+            int i = 0;
+            StringBuilder str = new StringBuilder();
+            for (var spot : this.boardSpaces) {
+                if (i % 8 == 0) {
+                    str.append("|\n");
+                }
+                if (spot == null) {
+                    str.append("| ");
+                } else {
+                    str.append("|");
+                    str.append(spot);
+                }
+                i++;
+            }
+            return str.toString();
+        } else {
+            StringBuilder str = new StringBuilder();
+            for (int i = 63; i >= 0; i--) {
+                if (i % 8 == 0) {
+                    str.append("|\n");
+                }
+                if (boardSpaces.get(i) == null) {
+                    str.append("| ");
+                } else {
+                    str.append("|");
+                    str.append(boardSpaces.get(i));
+                }
+            }
+            return str.toString();
+        }
     }
 }

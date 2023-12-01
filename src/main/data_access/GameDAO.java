@@ -4,6 +4,7 @@ import chess.*;
 import chess.pieces.*;
 import com.google.gson.*;
 import dataAccess.DataAccessException;
+import deserializers.GameModDeserializer;
 import models.GameMod;
 
 import java.lang.reflect.Type;
@@ -32,6 +33,8 @@ public class GameDAO {
             throw new DataAccessException("This ID is already used by an existing game.");
         } else {
             try(var conn = getConnection()) {
+                
+                newGame.getGame().getBoard().resetBoard();
                 
                 conn.setCatalog("chess");
                 
@@ -77,7 +80,7 @@ public class GameDAO {
                 var rs = preparedStatement.executeQuery();
                 
                 if (rs.next()) {
-                    return deserializer(rs.getString("gameMod"));
+                    return gameModDeserializer.deserializer(rs.getString("gameMod"));
                 } else {
                     return null;
                 }
@@ -109,7 +112,7 @@ public class GameDAO {
                 var rs = preparedStatement.executeQuery();
                 
                 while (rs.next()) {
-                    allGames.put(Integer.parseInt(rs.getString("gameID")), deserializer(rs.getString("gameMod")));
+                    allGames.put(Integer.parseInt(rs.getString("gameID")), gameModDeserializer.deserializer(rs.getString("gameMod")));
                 }
                 return allGames;
             }
@@ -199,46 +202,48 @@ public class GameDAO {
         }
     }
     
-    private GameMod deserializer(String stringToChange) {
-        GsonBuilder gsonBuilder = new GsonBuilder()
-                .registerTypeAdapter(ChessGameImp.class, new GameAdapter());
-        return gsonBuilder.create().fromJson(stringToChange, GameMod.class);
-    }
+    private GameModDeserializer gameModDeserializer = new GameModDeserializer();
     
-    private class GameAdapter implements JsonDeserializer<ChessGameImp> {
-        
-        @Override
-        public ChessGameImp deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            GsonBuilder gsonBuilder = new GsonBuilder()
-                    .registerTypeAdapter(ChessBoardImp.class, new BoardAdapter());
-            return gsonBuilder.create().fromJson(jsonElement, ChessGameImp.class);
-        }
-    }
+//    private GameMod deserializer(String stringToChange) {
+//        GsonBuilder gsonBuilder = new GsonBuilder()
+//                .registerTypeAdapter(ChessPiece.class, new PieceAdapter());
+//        return gsonBuilder.create().fromJson(stringToChange, GameMod.class);
+//    }
     
-    private class BoardAdapter implements JsonDeserializer<ChessBoard> {
-        
-        @Override
-        public ChessBoard deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            GsonBuilder gsonBuilder = new GsonBuilder()
-                    .registerTypeAdapter(ChessPiece.class, new PieceAdapter());
-            return gsonBuilder.create().fromJson(jsonElement, ChessBoardImp.class);
-        }
-    }
+//    private class GameAdapter implements JsonDeserializer<ChessGameImp> {
+//
+//        @Override
+//        public ChessGameImp deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+//            GsonBuilder gsonBuilder = new GsonBuilder()
+//                    .registerTypeAdapter(ChessBoard.class, new BoardAdapter());
+//            return gsonBuilder.create().fromJson(jsonElement, ChessGameImp.class);
+//        }
+//    }
+//
+//    private class BoardAdapter implements JsonDeserializer<ChessBoard> {
+//
+//        @Override
+//        public ChessBoard deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+//            GsonBuilder gsonBuilder = new GsonBuilder()
+//                    .registerTypeAdapter(ChessPiece.class, new PieceAdapter());
+//            return gsonBuilder.create().fromJson(jsonElement, ChessBoardImp.class);
+//        }
+//    }
     
-    private class PieceAdapter implements JsonDeserializer<ChessPiece> {
-        
-        @Override
-        public ChessPiece deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            GsonBuilder gson = new GsonBuilder();
-            String pieceType = jsonElement.getAsJsonObject().get("type").getAsString();
-            return switch (pieceType) {
-                case "QUEEN" -> gson.create().fromJson(jsonElement, Queen.class);
-                case "KING" -> gson.create().fromJson(jsonElement, King.class);
-                case "KNIGHT" -> gson.create().fromJson(jsonElement, Knight.class);
-                case "BISHOP" -> gson.create().fromJson(jsonElement, Bishop.class);
-                case "ROOK" -> gson.create().fromJson(jsonElement, Rook.class);
-                default -> gson.create().fromJson(jsonElement, Pawn.class);
-            };
-        }
-    }
+//    private class PieceAdapter implements JsonDeserializer<ChessPiece> {
+//        @Override
+//        public ChessPiece deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+//            GsonBuilder gson = new GsonBuilder();
+//            String pieceType = jsonElement.getAsJsonObject().get("myType").getAsString();
+//            return switch (pieceType) {
+//                case "QUEEN" -> gson.create().fromJson(jsonElement, Queen.class);
+//                case "KING" -> gson.create().fromJson(jsonElement, King.class);
+//                case "KNIGHT" -> gson.create().fromJson(jsonElement, Knight.class);
+//                case "BISHOP" -> gson.create().fromJson(jsonElement, Bishop.class);
+//                case "ROOK" -> gson.create().fromJson(jsonElement, Rook.class);
+//                case "PAWN" -> gson.create().fromJson(jsonElement, Pawn.class);
+//                default -> throw new UnsupportedOperationException("the class is wrong for chess piece gson");
+//            };
+//        }
+//    }
 }
