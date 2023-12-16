@@ -35,7 +35,7 @@ public class Join {
         } if (request.getPlayerColor() == null) {
             joinResult.setMessage("you have begun observing the game");
             res.push(200);
-        } else if (Objects.equals(request.getPlayerColor(), "WHITE")) {
+        } else if (Objects.equals(request.getPlayerColor(), "white")) {
             if (game.getWhiteUsername() == null) {
                 game.setWhiteUsername(authToken.getUsername());
                 joinResult.setMessage("you are now the white player");

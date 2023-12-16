@@ -1,17 +1,13 @@
 package ui;
 
 import chess.ChessPiece;
-import chess.pieces.*;
 import com.google.gson.*;
-import deserializers.GameModDeserializer;
 import deserializers.PieceAdapter;
-import models.GameMod;
 import request.*;
 import result.*;
 import Exception.ResponseException;
 
 import java.io.*;
-import java.lang.reflect.Type;
 import java.net.*;
 import java.util.Objects;
 
@@ -50,6 +46,7 @@ public class ServerFacade {
     
     public JoinResult join(JoinRequest joinRequest, LoginResult login) throws ResponseException {
         var path = "/game";
+        
         return this.makeRequest("PUT", path, joinRequest, JoinResult.class, login);
     }
     

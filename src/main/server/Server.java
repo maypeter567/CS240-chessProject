@@ -1,17 +1,26 @@
 package server;
 
 import Handlers.*;
+import server.webSocket.WebSocketHandler;
 import spark.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import org.eclipse.jetty.websocket.api.annotations.*;
 
+@WebSocket
 public class Server{
+    private final WebSocketHandler webSocketHandler;
+    
+    public Server() {
+        webSocketHandler = new WebSocketHandler();
+    }
+    
     public static void main(String[] args) {
         var server = new Server();
         try {
-            server.configureDatabase();
+            configureDatabase();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -68,6 +77,8 @@ public class Server{
         Spark.port(8080);
         
         Spark.externalStaticFileLocation("web");
+        
+        Spark.webSocket("/connect", webSocketHandler);
         
         Spark.delete("/db", new ClearHandler());
         Spark.post("/game", new CreateGameHandler());

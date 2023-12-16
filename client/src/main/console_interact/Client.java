@@ -1,15 +1,24 @@
 package console_interact;
 
+import chess.ChessGame;
+import org.jetbrains.annotations.NotNull;
 import request.*;
 import result.*;
 import ui.*;
 
+import java.io.IOException;
+import java.util.Objects;
 import java.util.Scanner;
 import Exception.ResponseException;
+import webSocketMessages.userCommands.allCommands.JoinPlayerGameCommand;
 
-public class Client {
+import javax.websocket.Endpoint;
+import javax.websocket.EndpointConfig;
+import javax.websocket.Session;
+
+public class Client extends Endpoint {
     
-    public static void main(String[] args) {
+    public static void main(String @NotNull [] args) {
         JoinResult joinResult = null;
         ListGamesResult listGamesResult = null;
         CreateGameResult createGameResult = null;
@@ -34,6 +43,7 @@ public class Client {
             var command = tokens[0];
             
             ServerFacade serverFacade = new ServerFacade(urlPath);
+            WebSocketFacade ws;
             if (notLoggedIn) {
                 switch (command) {
                     case "help":
@@ -62,19 +72,19 @@ public class Client {
                         break;
                     case "register":
                         RegisterRequest registerRequest = new RegisterRequest();
-                        if (tokens.length == 4) { // tokens is correct length
+                        if (tokens.length == 4) { // tokens are correct length
                             registerRequest.setUsername(tokens[1]);
                             registerRequest.setPassword(tokens[2]);
                             registerRequest.setEmail(tokens[3]);
                             try {
-                                register = serverFacade.register(registerRequest);
+                                serverFacade.register(registerRequest);
                             } catch (ResponseException e) {
                                 System.out.println(e.getMessage());
                                 System.out.println(">>> ");
                                 continue;
                             }
                             System.out.println("registration complete, the may now log in");
-                        } else { // tokens is not correct length
+                        } else { // tokens are not correct length
                             System.out.println("you have not provided enough arguments. type 'help' for a list of commands and how to use them.");
                         }
                         break;
@@ -92,7 +102,7 @@ public class Client {
                                 LogoutResult logout = serverFacade.logout(login);
                             } catch (ResponseException e){
                                 System.out.println(e.getMessage());
-                                System.out.printf(">>> ");
+                                System.out.print(">>> ");
                                 continue;
                             }
                             System.out.println("you are now logged out,  type help for a list of commands.");
@@ -109,7 +119,7 @@ public class Client {
                                 createGameResult = serverFacade.createGame(createGameRequest, login);
                             } catch (ResponseException e) {
                                 System.out.println(e.getMessage());
-                                System.out.printf(">>> ");
+                                System.out.print(">>> ");
                                 continue;
                             }
                             System.out.println("you have successfully created a game, it's ID is: " + createGameResult.getGameID());
@@ -124,7 +134,7 @@ public class Client {
                                 listGamesResult = serverFacade.listGames(listGamesRequest, login);
                             } catch (ResponseException e) {
                                 System.out.println(e.getMessage());
-                                System.out.printf(">>> ");
+                                System.out.print(">>> ");
                                 continue;
                             }
                             new PrintListGames().print(listGamesResult);
@@ -137,19 +147,33 @@ public class Client {
                         if (tokens.length == 3) {
                             joinRequest1.setGameID(Integer.parseInt(tokens[1]));
                             joinRequest1.setPlayerColor(tokens[2]);
+                            ChessGame.TeamColor teamColor;
+                            if (Objects.equals(joinRequest1.getPlayerColor(), "WHITE")) {
+                                teamColor = ChessGame.TeamColor.WHITE;
+                            } else {
+                                teamColor = ChessGame.TeamColor.BLACK;
+                            }
                             try {
-                                joinResult = serverFacade.join(joinRequest1, login);
+                                serverFacade.join(joinRequest1, login);
                             } catch (ResponseException e) {
                                 System.out.println(e.getMessage());
-                                System.out.printf(">>> ");
+                                System.out.print(">>> ");
                                 continue;
+                            }
+                            try {
+                                ws = new WebSocketFacade(urlPath);
+                                JoinPlayerGameCommand joinPlayerGameCommand = new JoinPlayerGameCommand(auth, joinRequest1.getGameID(), teamColor);
+                                boolean running = ws.isOpen();
+                                ws.joinPlayerGame(joinPlayerGameCommand);
+                            } catch (ResponseException | IOException e) {
+                                System.out.println(e.getMessage());
                             }
                             ListGamesRequest listGamesRequest2 = new ListGamesRequest();
                             try {
                                 listGamesResult = serverFacade.listGames(listGamesRequest2, login);
                             } catch (ResponseException e) {
                                 System.out.println(e.getMessage());
-                                System.out.printf(">>> ");
+                                System.out.print(">>> ");
                                 continue;
                             }
                             for (var i : listGamesResult.getGames()) {
@@ -167,7 +191,7 @@ public class Client {
                         if (tokens.length == 2) {
                             joinRequest2.setGameID(Integer.parseInt(tokens[1]));
                             try {
-                                joinResult = serverFacade.join(joinRequest2, login);
+                                serverFacade.join(joinRequest2, login);
                             } catch (ResponseException e) {
                                 if (e.StatusCode() == 400) {
                                     System.out.println("the game you requested doesn't exist.");
@@ -183,7 +207,7 @@ public class Client {
                                 listGamesResult = serverFacade.listGames(listGamesRequest3, login);
                             } catch (ResponseException e) {
                                 System.out.println(e.getMessage());
-                                System.out.printf(">>> ");
+                                System.out.print(">>> ");
                                 continue;
                             }
                             for (var i : listGamesResult.getGames()) {
@@ -201,7 +225,7 @@ public class Client {
                             LogoutResult logout = serverFacade.logout(login);
                         } catch (ResponseException e) {
                             System.out.println(e.getMessage());
-                            System.out.printf(">>> ");
+                            System.out.print(">>> ");
                             continue;
                         }
                         notLoggedIn = true;
@@ -211,7 +235,12 @@ public class Client {
                         System.out.println(command + " is not a valid command, please type 'help' for a list of commands");
                 }
             }
-            System.out.printf(">>> ");
+            System.out.print(">>> ");
         }
+    }
+    
+    @Override
+    public void onOpen(Session session, EndpointConfig endpointConfig) {
+    
     }
 }

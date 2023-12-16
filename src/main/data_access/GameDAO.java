@@ -1,13 +1,11 @@
 package data_access;
 
 import chess.*;
-import chess.pieces.*;
 import com.google.gson.*;
 import dataAccess.DataAccessException;
-import deserializers.GameModDeserializer;
+import deserializers.DeserializerGameMod;
 import models.GameMod;
 
-import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -80,7 +78,7 @@ public class GameDAO {
                 var rs = preparedStatement.executeQuery();
                 
                 if (rs.next()) {
-                    return gameModDeserializer.deserializer(rs.getString("gameMod"));
+                    return deserializerGameMod.deserializer(rs.getString("gameMod"));
                 } else {
                     return null;
                 }
@@ -112,7 +110,7 @@ public class GameDAO {
                 var rs = preparedStatement.executeQuery();
                 
                 while (rs.next()) {
-                    allGames.put(Integer.parseInt(rs.getString("gameID")), gameModDeserializer.deserializer(rs.getString("gameMod")));
+                    allGames.put(Integer.parseInt(rs.getString("gameID")), deserializerGameMod.deserializer(rs.getString("gameMod")));
                 }
                 return allGames;
             }
@@ -202,7 +200,7 @@ public class GameDAO {
         }
     }
     
-    private GameModDeserializer gameModDeserializer = new GameModDeserializer();
+    private DeserializerGameMod deserializerGameMod = new DeserializerGameMod();
     
 //    private GameMod deserializer(String stringToChange) {
 //        GsonBuilder gsonBuilder = new GsonBuilder()
